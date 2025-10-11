@@ -1991,7 +1991,7 @@ void Look(uint32 CreatureID, Object Obj){
 				if(MinutesLeft == 0){
 					snprintf(Help, sizeof(Help), " that is brand-new");
 				}else{
-					snprintf(Help, sizeof(Help), " that has energy for %u minute%s left",
+					snprintf(Help, sizeof(Help), " that has energy for %u minutes%s left",
 							MinutesLeft, (MinutesLeft != 1 ? "s" : ""));
 				}
 				strcat(Description, Help);
