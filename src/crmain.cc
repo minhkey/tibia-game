@@ -216,7 +216,22 @@ TCreature::~TCreature(void){
 		try{
 			Object Con = GetMapContainer(this->posx, this->posy, this->posz);
 			Object Corpse = Create(Con, CorpseType, 0);
-			Log("game", "Tod von %s: LoseInventory=%d.\n", this->Name, this->LoseInventory);
+			// Log creature death with killer information
+			if(this->Murderer[0] != 0){
+				Log("game", "Tod von %s: LoseInventory=%d, Killer=%s.\n", this->Name, this->LoseInventory, this->Murderer);
+
+				// CSV kill log entry
+				time_t now = time(NULL);
+				struct tm LocalTime = GetLocalTimeTM(now);
+				int level = (this->Skills[SKILL_LEVEL] != NULL) ? this->Skills[SKILL_LEVEL]->Get() : 0;
+				Log("kills", "%02d.%02d.%04d %02d:%02d:%02d,%ld,%s,%s,%d,%d,%d,%d\n",
+					LocalTime.tm_mday, LocalTime.tm_mon + 1, LocalTime.tm_year + 1900,
+					LocalTime.tm_hour, LocalTime.tm_min, LocalTime.tm_sec,
+					now, this->Murderer, this->Name, level,
+					this->posx, this->posy, this->posz);
+			} else {
+				Log("game", "Tod von %s: LoseInventory=%d, Killer=NA.\n", this->Name, this->LoseInventory);
+			}
 
 			if(this->Type == PLAYER){
 				char Help[128];

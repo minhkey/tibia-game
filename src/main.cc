@@ -249,6 +249,9 @@ static void InitAll(void){
 		InitSHM(!BeADaemon);
 		LockGame();
 		InitLog("game");
+		InitLog("kills");
+		// Add CSV header to kills log
+		Log("kills", "datetime,timestamp,killer,victim,level,x,y,z\n");
 		srand(time(NULL));
 		InitSignalHandler();
 		InitConnections();
