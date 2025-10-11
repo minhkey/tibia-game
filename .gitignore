@@ -1,5 +1,7 @@
+.claude
 .vscode
 bin
 build
 local
 *.log
+CLAUDE.md
