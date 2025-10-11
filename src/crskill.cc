@@ -1,4 +1,5 @@
 #include "cr.hh"
+#include "config.hh"
 #include "operate.hh"
 
 #include <math.h>
@@ -395,7 +396,7 @@ void TSkillProbe::Increase(int Amount){
 	// function was calling `GetExpForLevel` twice instead of using `NextLevel`
 	// which makes me wonder whether `NextLevel` is properly initialized.
 	int Range = 0;
-	this->Exp += Amount;
+	this->Exp += Amount * SkillRateMultiplier;
 	while(this->Exp >= this->NextLevel){
 		this->Act += 1;
 		this->LastLevel = this->NextLevel;

@@ -33,6 +33,7 @@ int PremiumPlayerBuffer;
 int PremiumNewbieBuffer;
 int Beat;
 int RebootTime;
+int SkillRateMultiplier;
 
 TDatabaseSettings ADMIN_DATABASE;
 TDatabaseSettings VOLATILE_DATABASE;
@@ -99,6 +100,7 @@ void ReadConfig(void){
 	NumberOfQueryManagers = 0;
 	Beat = 200;
 	RebootTime = 540;
+	SkillRateMultiplier = 2;
 	ADMIN_DATABASE.Database[0] = 0;
 	VOLATILE_DATABASE.Database[0] = 0;
 	WEB_DATABASE.Database[0] = 0;
@@ -181,6 +183,8 @@ void ReadConfig(void){
 			strcpy(WorldName, Script.readString());
 		}else if(strcmp(Identifier, "beat") == 0){
 			Beat = Script.readNumber();
+		}else if(strcmp(Identifier, "skillratemultiplier") == 0){
+			SkillRateMultiplier = Script.readNumber();
 		}else if(strcmp(Identifier, "admindatabase") == 0){
 			Script.readSymbol('(');
 			strcpy(ADMIN_DATABASE.Product, Script.readIdentifier());

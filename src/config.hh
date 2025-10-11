@@ -48,6 +48,7 @@ extern int PremiumPlayerBuffer;
 extern int PremiumNewbieBuffer;
 extern int Beat;
 extern int RebootTime;
+extern int SkillRateMultiplier;
 extern TDatabaseSettings ADMIN_DATABASE;
 extern TDatabaseSettings VOLATILE_DATABASE;
 extern TDatabaseSettings WEB_DATABASE;
