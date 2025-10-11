@@ -901,6 +901,30 @@ uint32 TCombat::GetMostDangerousAttacker(void){
 	return Attacker;
 }
 
+// Helper function to find nearby party members within experience sharing range (8 tiles)
+static void FindNearbyPartyMembers(uint32 PartyLeader, int CenterX, int CenterY, int CenterZ,
+                                   uint32 *PartyMembers, int *MemberCount, int MaxMembers){
+	*MemberCount = 0;
+	if(*MemberCount >= MaxMembers) return;
+
+	// Search in 8-tile radius around the death location
+	TFindCreatures Search(8, 8, CenterX, CenterY, FIND_PLAYERS);
+	while(true){
+		uint32 PlayerID = Search.getNext();
+		if(PlayerID == 0) break;
+		if(*MemberCount >= MaxMembers) break;
+
+		TPlayer *Player = (TPlayer*)GetCreature(PlayerID);
+		if(Player == NULL || Player->Type != PLAYER) continue;
+
+		// Check if player is in the same party and on the same floor
+		if(Player->GetPartyLeader(true) == PartyLeader && Player->posz == CenterZ){
+			PartyMembers[*MemberCount] = PlayerID;
+			(*MemberCount)++;
+		}
+	}
+}
+
 void TCombat::DistributeExperiencePoints(uint32 Exp){
 	TCreature *Master = this->Master;
 	print(3, "%s ist gestorben. Verteile %u EXP...\n", Master->Name, Exp);
@@ -908,32 +932,132 @@ void TCombat::DistributeExperiencePoints(uint32 Exp){
 		return;
 	}
 
+	// Track which parties have already received experience to avoid double-dipping
+	uint32 ProcessedParties[20]; // Support up to 20 different parties
+	int ProcessedPartyCount = 0;
+
 	for(int i = 0; i < NARRAY(this->CombatList); i += 1){
 		TCreature *Attacker = GetCreature(this->CombatList[i].ID);
-		if(Attacker == NULL || Attacker->IsDead){
+		if(Attacker == NULL || Attacker->IsDead || Attacker->Type != PLAYER){
 			continue;
 		}
 
-		int Amount = (int)((Exp * this->CombatList[i].Damage) / this->CombatDamage);
-		if(Master->Type == PLAYER && Attacker->Type == PLAYER){
-			if(((TPlayer*)Master)->InPartyWith((TPlayer*)Attacker, true)){
-				continue;
+		TPlayer *AttackerPlayer = (TPlayer*)Attacker;
+		uint32 PartyLeader = AttackerPlayer->GetPartyLeader(true);
+
+		// Check if this player is in a party
+		if(PartyLeader != 0){
+			// Check if we've already processed this party
+			bool AlreadyProcessed = false;
+			for(int j = 0; j < ProcessedPartyCount; j++){
+				if(ProcessedParties[j] == PartyLeader){
+					AlreadyProcessed = true;
+					break;
+				}
 			}
 
-			int MasterLevel = Master->Skills[SKILL_LEVEL]->Get();
-			int AttackerLevel = Attacker->Skills[SKILL_LEVEL]->Get();
-			int MaxLevel = (MasterLevel * 11) / 10;
-			if(AttackerLevel <= MaxLevel){
-				continue;
+			if(AlreadyProcessed){
+				continue; // Skip this party member, party already got exp
 			}
 
-			Amount = ((MaxLevel - AttackerLevel) * Amount) / MasterLevel;
-			print(3, "%s erhält %d EXP.\n", Attacker->Name, Amount);
-		}
+			// Mark this party as processed
+			if(ProcessedPartyCount < NARRAY(ProcessedParties)){
+				ProcessedParties[ProcessedPartyCount++] = PartyLeader;
+			}
 
-		if(Amount > 0){
-			if(Attacker->Type == PLAYER){
-				// NOTE(fusion): Enable soul regeneration.
+			// Find all nearby party members
+			uint32 PartyMembers[50]; // Maximum 50 party members
+			int MemberCount = 0;
+			FindNearbyPartyMembers(PartyLeader, Master->posx, Master->posy, Master->posz,
+								   PartyMembers, &MemberCount, NARRAY(PartyMembers));
+
+			if(MemberCount > 0){
+				// Calculate party's total damage contribution
+				uint32 PartyTotalDamage = 0;
+				for(int k = 0; k < NARRAY(this->CombatList); k++){
+					TCreature *CombatCreature = GetCreature(this->CombatList[k].ID);
+					if(CombatCreature != NULL && CombatCreature->Type == PLAYER){
+						TPlayer *CombatPlayer = (TPlayer*)CombatCreature;
+						if(CombatPlayer->GetPartyLeader(true) == PartyLeader){
+							PartyTotalDamage += this->CombatList[k].Damage;
+						}
+					}
+				}
+
+				// Calculate total experience for the party based on their damage contribution
+				int PartyTotalExp = (int)((Exp * PartyTotalDamage) / this->CombatDamage);
+
+				// Handle PvP level restrictions for party
+				if(Master->Type == PLAYER){
+					int MasterLevel = Master->Skills[SKILL_LEVEL]->Get();
+					int MaxLevel = (MasterLevel * 11) / 10;
+
+					// Find the highest level party member for level restriction calculation
+					int HighestPartyLevel = 0;
+					for(int m = 0; m < MemberCount; m++){
+						TPlayer *PartyMember = (TPlayer*)GetCreature(PartyMembers[m]);
+						if(PartyMember != NULL){
+							int MemberLevel = PartyMember->Skills[SKILL_LEVEL]->Get();
+							if(MemberLevel > HighestPartyLevel){
+								HighestPartyLevel = MemberLevel;
+							}
+						}
+					}
+
+					// Apply level restriction if needed
+					if(HighestPartyLevel > MaxLevel){
+						PartyTotalExp = ((MaxLevel - HighestPartyLevel) * PartyTotalExp) / MasterLevel;
+						print(3, "Party experience reduced due to level restrictions.\n");
+					}
+				}
+
+				// Distribute experience evenly among nearby party members
+				if(PartyTotalExp > 0 && MemberCount > 0){
+					int ExpPerMember = PartyTotalExp / MemberCount;
+
+					for(int m = 0; m < MemberCount; m++){
+						TPlayer *PartyMember = (TPlayer*)GetCreature(PartyMembers[m]);
+						if(PartyMember != NULL && !PartyMember->IsDead){
+							// Enable soul regeneration
+							int MemberLevel = PartyMember->Skills[SKILL_LEVEL]->Get();
+							if(ExpPerMember >= MemberLevel){
+								int Interval = 120;
+								if(PartyMember->GetActivePromotion()){
+									Interval = 15;
+								}
+
+								int Count = PartyMember->Skills[SKILL_SOUL]->TimerValue() % Interval;
+								if(Count == 0){
+									Count = Interval;
+								}
+
+								PartyMember->SetTimer(SKILL_SOUL, (240 / Interval), Count, Interval, -1);
+							}
+
+							PartyMember->Skills[SKILL_LEVEL]->Increase(ExpPerMember);
+							TextualEffect(PartyMember->CrObject, COLOR_WHITE, "%d", ExpPerMember);
+							print(3, "%s (party) erhält %d EXP.\n", PartyMember->Name, ExpPerMember);
+						}
+					}
+				}
+			}
+		} else {
+			// Solo player - use original damage-based calculation
+			int Amount = (int)((Exp * this->CombatList[i].Damage) / this->CombatDamage);
+
+			// Handle PvP level restrictions for solo players
+			if(Master->Type == PLAYER){
+				int MasterLevel = Master->Skills[SKILL_LEVEL]->Get();
+				int AttackerLevel = Attacker->Skills[SKILL_LEVEL]->Get();
+				int MaxLevel = (MasterLevel * 11) / 10;
+				if(AttackerLevel > MaxLevel){
+					Amount = ((MaxLevel - AttackerLevel) * Amount) / MasterLevel;
+					print(3, "%s erhält %d EXP.\n", Attacker->Name, Amount);
+				}
+			}
+
+			if(Amount > 0){
+				// Enable soul regeneration
 				int AttackerLevel = Attacker->Skills[SKILL_LEVEL]->Get();
 				if(Amount >= AttackerLevel){
 					int Interval = 120;
@@ -948,10 +1072,10 @@ void TCombat::DistributeExperiencePoints(uint32 Exp){
 
 					Attacker->SetTimer(SKILL_SOUL, (240 / Interval), Count, Interval, -1);
 				}
-			}
 
-			Attacker->Skills[SKILL_LEVEL]->Increase(Amount);
-			TextualEffect(Attacker->CrObject, COLOR_WHITE, "%d", Amount);
+				Attacker->Skills[SKILL_LEVEL]->Increase(Amount);
+				TextualEffect(Attacker->CrObject, COLOR_WHITE, "%d", Amount);
+			}
 		}
 	}
 }

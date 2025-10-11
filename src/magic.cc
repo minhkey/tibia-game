@@ -2189,6 +2189,7 @@ void MassHeal(TCreature *Actor, Object Target, int ManaPoints, int SoulPoints, i
 	}
 }
 
+
 void HealFriend(TCreature *Actor, const char *TargetName, int ManaPoints, int SoulPoints, int Amount){
 	if(Actor == NULL){
 		error("HealFriend: Ungültige Kreatur übergeben.\n");
@@ -3531,9 +3532,9 @@ static void CastSpell(uint32 CreatureID, int SpellNr, const char (*SpellStr)[512
 		}
 
 		case 56:{
-			int Damage = ComputeDamage(Actor, SpellNr, 200, 50);
-			MassCombat(Actor, Actor->CrObject, ManaPoints, SoulPoints, Damage,
-					EFFECT_POISON, 8, DAMAGE_POISON_PERIODIC, ANIMATION_NONE);
+			// Great Mass Healing - Enhanced version with 4x healing for balanced mana efficiency
+			int Amount = ComputeDamage(Actor, SpellNr, 800, 160);  // 4x regular mass healing (200,40 -> 800,160)
+			MassHeal(Actor, Actor->CrObject, ManaPoints, SoulPoints, Amount, 6);  // Larger radius (4 -> 6)
 			break;
 		}
 
@@ -3627,6 +3628,13 @@ static void CastSpell(uint32 CreatureID, int SpellNr, const char (*SpellStr)[512
 
 		case 95:{
 			CreateArrows(Actor, ManaPoints, SoulPoints, 4, 1);
+			break;
+		}
+
+		case 104:{
+			int Damage = ComputeDamage(Actor, SpellNr, 150, 50);
+			AngleCombat(Actor, ManaPoints, SoulPoints, Damage,
+					EFFECT_FIRE, 5, 30, DAMAGE_FIRE);
 			break;
 		}
 	}
@@ -4130,7 +4138,7 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest){
 			}
 
 			case 8:{
-				int Damage = ComputeDamage(Actor, SpellNr, 30, 10);
+				int Damage = ComputeDamage(Actor, SpellNr, 45, 15);  // 1.5x: 30->45, 10->15
 				Combat(Actor, Dest, 0, 0, Damage, EFFECT_FIRE_BURST,
 						ANIMATION_FIRE, DAMAGE_ENERGY);
 				break;
@@ -4158,7 +4166,7 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest){
 			}
 
 			case 16:{
-				int Damage = ComputeDamage(Actor, SpellNr, 50, 15);
+				int Damage = ComputeDamage(Actor, SpellNr, 75, 23);  // 1.5x: 50->75, 15->23 (rounded)
 				MassCombat(Actor, Dest, 0, 0, Damage, EFFECT_FIRE,
 						4, DAMAGE_FIRE, ANIMATION_FIRE);
 				break;
@@ -4170,7 +4178,7 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest){
 			}
 
 			case 18:{
-				int Damage = ComputeDamage(Actor, SpellNr, 60, 40);
+				int Damage = ComputeDamage(Actor, SpellNr, 90, 60);  // 1.5x: 60->90, 40->60
 				MassCombat(Actor, Dest, 0, 0, Damage, EFFECT_FIRE_EXPLOSION,
 						1, DAMAGE_PHYSICAL, ANIMATION_FIRE);
 				break;
@@ -4281,6 +4289,24 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest){
 				break;
 			}
 
+			case 36:{
+				// Mortal Strike - Same damage calculation as berserk (exori)
+				int Level = Actor->Skills[SKILL_LEVEL]->Get();
+				int Damage = (Level * ComputeDamage(NULL, 0, 80, 20)) / 25;
+
+				Combat(Actor, Dest, 0, 0, Damage, EFFECT_DEATH,
+						ANIMATION_DEATH, DAMAGE_PHYSICAL);
+				break;
+			}
+
+			case 43:{
+				// Great Energy Ball - Same as Great Fireball but with energy damage
+				int Damage = ComputeDamage(Actor, SpellNr, 75, 23);  // Same enhanced damage as Great Fireball
+				MassCombat(Actor, Dest, 0, 0, Damage, EFFECT_ENERGY,
+						4, DAMAGE_ENERGY, ANIMATION_ENERGY);
+				break;
+			}
+
 			default:{
 				error("UseMagicItem: Spell %d noch nicht implementiert.\n", SpellNr);
 				throw ERROR;
@@ -4327,14 +4353,15 @@ void DrinkPotion(uint32 CreatureID, Object Obj){
 		int Amount = ComputeDamage(NULL, 0, 100, 50);
 		RefreshMana(Player, 0, 0, Amount);
 	}else if(LiquidType == LIQUID_LIFE){
-		int Amount = ComputeDamage(NULL, 0, 50, 25);
-		Heal(Player, 0, 0, Amount);
+		// Great Mana Potion - provides enhanced mana restoration
+		int Amount = ComputeDamage(NULL, 0, 300, 150);  // ~3x regular mana potion
+		RefreshMana(Player, 0, 0, Amount);
 	}else{
 		error("DrinkPotion: Objekt enthält keinen Zaubertrank.\n");
 		throw ERROR;
 	}
 
-	Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
+	Delete(Obj, -1);  // Destroy the bottle completely
 }
 
 // Magic Init Functions
@@ -4719,6 +4746,17 @@ static void InitSpells(void){
 	Spell->Flags = 0;
 	Spell->Comment = "Get Item";
 
+	Spell = CreateSpell(36, "ad", "hur", "mort", "");
+	Spell->Mana = 400;           // Lower than regular SD (880)
+	Spell->Level = 30;           // Lower level requirement (vs 45)
+	Spell->RuneGr = 79;          // Same group as other runes
+	Spell->RuneNr = 99;          // Assuming this sprite exists
+	Spell->Flags = 9;            // Rune spell flag
+	Spell->Amount = 3;           // 3 charges per rune
+	Spell->RuneLevel = 3;        // Low magic level requirement (vs 15)
+	Spell->SoulPoints = 2;       // Lower soul cost
+	Spell->Comment = "Mortal Strike";
+
 	Spell = CreateSpell(37, "al", "ani", "para", "");
 	Spell->Mana = 0;
 	Spell->Level = 0;
@@ -4755,6 +4793,17 @@ static void InitSpells(void){
 	Spell->SoulPoints = 1;
 	Spell->Flags = 0;
 	Spell->Comment = "Food";
+
+	Spell = CreateSpell(43, "ad", "evo", "gran", "vis", "");
+	Spell->Mana = 480;           // Same as Great Fireball
+	Spell->Level = 23;           // Same as Great Fireball
+	Spell->RuneGr = 79;          // Same group as other runes
+	Spell->RuneNr = 45;          // Different sprite number
+	Spell->Flags = 9;            // Rune spell flag
+	Spell->Amount = 2;           // Same as Great Fireball
+	Spell->RuneLevel = 4;        // Same as Great Fireball
+	Spell->SoulPoints = 3;       // Same as Great Fireball
+	Spell->Comment = "Great Energy Ball";
 
 	Spell = CreateSpell(44, "ut", "amo", "vita", "");
 	Spell->Mana = 50;
@@ -4846,11 +4895,11 @@ static void InitSpells(void){
 	Spell->SoulPoints = 5;
 	Spell->Comment = "Energybomb";
 
-	Spell = CreateSpell(56, "ex", "evo", "gran", "mas", "pox", "");
+	Spell = CreateSpell(56, "ex", "evo", "gran", "mas", "res", "");
 	Spell->Mana = 600;
 	Spell->Level = 50;
 	Spell->Flags = 3;
-	Spell->Comment = "Poison Storm";
+	Spell->Comment = "Great Mass Healing";
 
 	Spell = CreateSpell(57, "om", "ana", "liber", "para", "para", "para", "");
 	Spell->Mana = 0;
@@ -5148,6 +5197,13 @@ static void InitSpells(void){
 	Spell->Level = 0;
 	Spell->Flags = 0;
 	Spell->Comment = "Start Monsterraid";
+
+	Spell = CreateSpell(104, "ex", "evo", "gran", "flam", "hur", "");
+	Spell->Mana = 250;
+	Spell->Level = 38;
+	Spell->Flags = 1;
+	Spell->Comment = "Great Fire Wave";
+
 }
 
 void InitMagic(void){
