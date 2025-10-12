@@ -162,7 +162,7 @@ static void SendString(TConnection *Connection, const char *String){
 static void SendOutfit(TConnection *Connection, TOutfit Outfit){
 	SendWord(Connection, (uint16)Outfit.OutfitID);
 	if(Outfit.OutfitID == 0){
-		SendWord(Connection, Outfit.ObjectType);
+		SendWord(Connection, (uint16)Outfit.ObjectType);
 	}else{
 		SendBytes(Connection, Outfit.Colors, sizeof(Outfit.Colors));
 	}
@@ -1166,7 +1166,7 @@ void SendPlayerData(TConnection *Connection){
 		return;
 	}
 
-	// TODO(fusion): I don't even think skills can even be NULL.
+	// TODO(fusion): I don't think skills can even be NULL.
 	int Level = 0;
 	int LevelPercent = 0;
 	int Experience = 0;

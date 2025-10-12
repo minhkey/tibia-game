@@ -22,7 +22,7 @@ typedef uint64_t uint64;
 typedef uintptr_t uintptr;
 typedef size_t usize;
 
-#define STATIC_ASSERT(expr) static_assert((expr), "static assertion failed: " #expr)
+#define STATIC_ASSERT(expr) static_assert((expr), #expr)
 #define NARRAY(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 #define ISPOW2(x) ((x) != 0 && ((x) & ((x) - 1)) == 0)
 #define KB(x) ((usize)(x) << 10)

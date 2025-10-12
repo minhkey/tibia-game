@@ -2344,7 +2344,7 @@ void Invisibility(TCreature *Actor, int ManaPoints, int SoulPoints, int Duration
 	}
 
 	CheckMana(Actor, ManaPoints, SoulPoints, 1000);
-	Actor->Outfit = TOutfit{};
+	Actor->Outfit = TOutfit::Invisible();
 	Actor->SetTimer(SKILL_ILLUSION, 1, Duration, Duration, -1);
 	GraphicalEffect(Actor->posx, Actor->posy, Actor->posz, EFFECT_MAGIC_BLUE);
 }
@@ -2496,7 +2496,7 @@ void ObjectIllusion(TCreature *Actor, int ManaPoints, int SoulPoints, Object Tar
 	CheckMana(Actor, ManaPoints, SoulPoints, 1000);
 	if(Actor->Skills[SKILL_ILLUSION]->Get() == 0){
 		Actor->Outfit.OutfitID = 0;
-		Actor->Outfit.ObjectType = (uint16)TargetType.getDisguise().TypeID;
+		Actor->Outfit.ObjectType = TargetType.getDisguise().TypeID;
 		Actor->SetTimer(SKILL_ILLUSION, 1, Duration, Duration, -1);
 	}
 

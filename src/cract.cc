@@ -1566,12 +1566,11 @@ void TCreature::NotifyChangeInventory(void){
 					AnnounceChangedCreature(this->ID, CREATURE_SPEED_CHANGED);
 				}else if(SkillNr == SKILL_ILLUSION){
 					if(NewDelta[SKILL_ILLUSION] > 0){
-						if(this->Outfit.OutfitID != 0 || this->Outfit.ObjectType != 0){
+						if(!this->IsInvisible()){
 							if(Skill->TimerValue() != 0){
 								this->SetTimer(SKILL_ILLUSION, 0, 0, 0, -1);
 							}
-							this->Outfit.OutfitID = 0;
-							this->Outfit.ObjectType = 0;
+							this->Outfit = TOutfit::Invisible();
 						}
 					}else if(Skill->TimerValue() == 0){
 						this->Outfit = this->OrgOutfit;
