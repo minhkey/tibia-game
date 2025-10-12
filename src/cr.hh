@@ -17,14 +17,18 @@ struct TPlayer;
 struct TOutfit{
 	int OutfitID;
 	union{
-		uint16 ObjectType;
+		int ObjectType;
 		uint8 Colors[4];
-		uint32 PackedData;
 	};
 
 	constexpr bool operator==(const TOutfit &Other) const {
+		// IMPORTANT(fusion): We don't need to have special comparisson cases
+		// if all members of the union have the same size. This is not true
+		// otherwise when smaller active fields leave trailing bytes of the
+		// union filled with whatever data was there before.
+		STATIC_ASSERT(sizeof(this->ObjectType) == sizeof(this->Colors));
 		return this->OutfitID == Other.OutfitID
-			&& this->PackedData == Other.PackedData;
+			&& this->ObjectType == Other.ObjectType;
 	}
 
 	static constexpr TOutfit Invisible(void){

@@ -1209,8 +1209,7 @@ TRaceData::TRaceData(void) :
 {
 	this->Name[0] = 0;
 	this->Article[0] = 0;
-	this->Outfit.OutfitID = 0;
-	this->Outfit.ObjectType = 0;
+	this->Outfit = TOutfit{};
 	this->Blood = BT_BLOOD;
 	this->ExperiencePoints = 0;
 	this->FleeThreshold = 0;
@@ -1347,7 +1346,7 @@ TOutfit ReadOutfit(TReadScriptFile *Script){
 	Outfit.OutfitID = Script->readNumber();
 	Script->readSymbol(',');
 	if(Outfit.OutfitID == 0){
-		Outfit.ObjectType = (uint16)Script->readNumber();
+		Outfit.ObjectType = Script->readNumber();
 	}else{
 		memcpy(Outfit.Colors, Script->readBytesequence(), sizeof(Outfit.Colors));
 	}
@@ -1361,7 +1360,7 @@ void WriteOutfit(TWriteScriptFile *Script, TOutfit Outfit){
 	Script->writeNumber(Outfit.OutfitID);
 	Script->writeText(",");
 	if(Outfit.OutfitID == 0){
-		Script->writeNumber((int)Outfit.ObjectType);
+		Script->writeNumber(Outfit.ObjectType);
 	}else{
 		Script->writeBytesequence(Outfit.Colors, sizeof(Outfit.Colors));
 	}
@@ -1660,7 +1659,7 @@ void LoadRace(const char *FileName){
 						Script.readSymbol('(');
 						TOutfit Outfit = ReadOutfit(&Script);
 						SpellData->ImpactParam1 = Outfit.OutfitID;
-						SpellData->ImpactParam2 = (int)Outfit.PackedData;
+						SpellData->ImpactParam2 = Outfit.ObjectType;
 						Script.readSymbol(',');
 						SpellData->ImpactParam3 = Script.readNumber();
 						Script.readSymbol(')');

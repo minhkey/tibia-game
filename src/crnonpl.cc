@@ -2578,7 +2578,7 @@ void TMonster::IdleStimulus(void){
 				case IMPACT_OUTFIT:{
 					TOutfit Outfit = {};
 					Outfit.OutfitID = SpellData->ImpactParam1;
-					Outfit.PackedData = (uint32)SpellData->ImpactParam2;
+					Outfit.ObjectType = SpellData->ImpactParam2;
 					int Duration = SpellData->ImpactParam3;
 					Impact = new TOutfitImpact(this, Outfit, Duration);
 					break;
