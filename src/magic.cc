@@ -4178,7 +4178,7 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest){
 			}
 
 			case 18:{
-				int Damage = ComputeDamage(Actor, SpellNr, 90, 60);  // 1.5x: 60->90, 40->60
+				int Damage = ComputeDamage(Actor, SpellNr, 60, 40);
 				MassCombat(Actor, Dest, 0, 0, Damage, EFFECT_FIRE_EXPLOSION,
 						1, DAMAGE_PHYSICAL, ANIMATION_FIRE);
 				break;
@@ -4747,14 +4747,14 @@ static void InitSpells(void){
 	Spell->Comment = "Get Item";
 
 	Spell = CreateSpell(36, "ad", "ori", "mort", "");
-	Spell->Mana = 800;           // Mana cost
-	Spell->Level = 45;           // Level requirement
+	Spell->Mana = 1000;          // Mana cost
+	Spell->Level = 65;           // Level requirement
 	Spell->RuneGr = 79;          // Same group as other runes
 	Spell->RuneNr = 3;           // Gr 79, Nr 3 = TypeID 3150 (see conversion.lst)
 	Spell->Flags = 1;            // Rune spell flag
-	Spell->Amount = 2;           // 2 charges per rune
+	Spell->Amount = 1;           // 2 charges per rune
 	Spell->RuneLevel = 10;       // Magic level requirement to use
-	Spell->SoulPoints = 4;       // Soul cost
+	Spell->SoulPoints = 5;       // Soul cost
 	Spell->Comment = "Mortal Strike";
 
 	Spell = CreateSpell(37, "al", "ani", "para", "");
@@ -4794,11 +4794,11 @@ static void InitSpells(void){
 	Spell->Flags = 0;
 	Spell->Comment = "Food";
 
-	Spell = CreateSpell(43, "ad", "evo", "gran", "vis", "");
+	Spell = CreateSpell(43, "ad", "ori", "gran", "vis", "");
 	Spell->Mana = 480;           // Same as Great Fireball
 	Spell->Level = 23;           // Same as Great Fireball
 	Spell->RuneGr = 79;          // Same group as other runes
-	Spell->RuneNr = 45;          // Different sprite number
+	Spell->RuneNr = 52;          // Gr 79 and Nr 52 = TypeID 3199
 	Spell->Flags = 9;            // Rune spell flag
 	Spell->Amount = 2;           // Same as Great Fireball
 	Spell->RuneLevel = 4;        // Same as Great Fireball
