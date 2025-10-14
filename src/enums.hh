@@ -6,6 +6,8 @@
 // TODO(fusion): Probably cleanup these names? Prefix values? Its crazy that
 // there are no collision problems (possibly yet).
 
+// These are called "Missile" in ObjectBuilder,
+// the numbers are aligned
 enum AnimationType: int {
 	ANIMATION_NONE					= 0,
 	ANIMATION_SPEAR					= 1,
@@ -146,7 +148,7 @@ enum CreatureType: int {
 // NOTE(fusion): Not in debug symbols.
 enum DamageType: int {
 	DAMAGE_NONE					= 0x0000,
-	DAMAGE_PHYSICAL				= 0x0001,
+	DAMAGE_PHYSICAL				= 0x0001, // 17 in objects.srv
 	DAMAGE_POISON				= 0x0002,
 	DAMAGE_FIRE					= 0x0004,
 	DAMAGE_ENERGY				= 0x0008,
@@ -171,6 +173,8 @@ enum Direction: int {
 };
 
 // TODO(fusion): Review these names.
+// These are called "Effect" in ObjectBuilder,
+// the numbers are aligned
 enum EffectType: int {
 	EFFECT_NONE					= 0,
 	EFFECT_BLOOD_HIT			= 1,
@@ -178,8 +182,9 @@ enum EffectType: int {
 	EFFECT_POFF					= 3,
 	EFFECT_BLOCK_HIT			= 4,
 	EFFECT_FIRE_EXPLOSION		= 5,
-	EFFECT_FIRE_BURST			= 6, // Not sure about this one.
-	EFFECT_FIRE					= 7,
+	EFFECT_FIRE_BURST			= 6, // Actually teleport animation
+	EFFECT_FIRE					= 7, // "Bigger" than 5
+	// Effect 8 is a yellow poison animation in ObjectBuilder
 	EFFECT_POISON				= 9,
 	EFFECT_BONE_HIT				= 10,
 	EFFECT_ENERGY				= 11,
@@ -190,6 +195,18 @@ enum EffectType: int {
 	EFFECT_FIRE_HIT				= 16,
 	EFFECT_POISON_HIT			= 17,
 	EFFECT_DEATH				= 18,
+	// These were not here originally but are present in ObjectBuilder
+	EFFECT_NOTES_GREEN          = 19,
+	EFFECT_NOTES_RED            = 20,
+	EFFECT_POISON_POFF          = 21,
+	EFFECT_NOTES_YELLOW         = 22,
+	EFFECT_NOTES_PURPLE         = 23,
+	EFFECT_NOTES_BLUE           = 24,
+	EFFECT_NOTES_WHITE          = 25,
+	// These are custom effects added by me, if not present in .dat/.spr
+	// files the game will most likely crash
+	EFFECT_DARK_CLOUD           = 26,
+	EFFECT_GREEN_SPECTRE        = 27
 };
 
 enum FLAG: int {
