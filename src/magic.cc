@@ -4746,15 +4746,15 @@ static void InitSpells(void){
 	Spell->Flags = 0;
 	Spell->Comment = "Get Item";
 
-	Spell = CreateSpell(36, "ad", "hur", "mort", "");
-	Spell->Mana = 400;           // Lower than regular SD (880)
-	Spell->Level = 30;           // Lower level requirement (vs 45)
+	Spell = CreateSpell(36, "ad", "ori", "mort", "");
+	Spell->Mana = 800;           // Mana cost
+	Spell->Level = 45;           // Level requirement
 	Spell->RuneGr = 79;          // Same group as other runes
-	Spell->RuneNr = 99;          // Assuming this sprite exists
-	Spell->Flags = 9;            // Rune spell flag
-	Spell->Amount = 3;           // 3 charges per rune
-	Spell->RuneLevel = 3;        // Low magic level requirement (vs 15)
-	Spell->SoulPoints = 2;       // Lower soul cost
+	Spell->RuneNr = 3;           // Gr 79, Nr 3 = TypeID 3150 (see conversion.lst)
+	Spell->Flags = 1;            // Rune spell flag
+	Spell->Amount = 2;           // 2 charges per rune
+	Spell->RuneLevel = 10;       // Magic level requirement to use
+	Spell->SoulPoints = 4;       // Soul cost
 	Spell->Comment = "Mortal Strike";
 
 	Spell = CreateSpell(37, "al", "ani", "para", "");
