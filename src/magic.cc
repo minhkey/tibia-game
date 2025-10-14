@@ -4306,6 +4306,22 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest){
 				break;
 			}
 
+			case 105:{
+				// Great Poison Ball - Same as Great Fireball but with poison damage
+				int Damage = ComputeDamage(Actor, SpellNr, 75, 23);  // Same enhanced damage as Great Fireball
+				MassCombat(Actor, Dest, 0, 0, Damage, EFFECT_POISON_HIT,
+						4, DAMAGE_POISON, ANIMATION_POISON);
+				break;
+			}
+
+			case 106:{
+				// Death cloud
+				int Damage = ComputeDamage(Actor, SpellNr, 70, 15);
+				MassCombat(Actor, Dest, 0, 0, Damage, EFFECT_DARK_CLOUD,
+						4, DAMAGE_PHYSICAL, ANIMATION_DEATH);
+				break;
+			}
+
 			default:{
 				error("UseMagicItem: Spell %d noch nicht implementiert.\n", SpellNr);
 				throw ERROR;
@@ -5202,6 +5218,28 @@ static void InitSpells(void){
 	Spell->Level = 38;
 	Spell->Flags = 1;
 	Spell->Comment = "Great Fire Wave";
+
+	Spell = CreateSpell(105, "ad", "ori", "gran", "pox", "");
+	Spell->Mana = 480;           // Same as Great Fireball
+	Spell->Level = 23;           // Same as Great Fireball
+	Spell->RuneGr = 79;          // Same group as other runes
+	Spell->RuneNr = 28;          // Gr 79 and Nr 28 = TypeID 3175
+	Spell->Flags = 9;            // Rune spell flag
+	Spell->Amount = 2;           // Same as Great Fireball
+	Spell->RuneLevel = 4;        // Same as Great Fireball
+	Spell->SoulPoints = 3;       // Same as Great Fireball
+	Spell->Comment = "Great Poison Ball";
+
+	Spell = CreateSpell(106, "ad", "ori", "gran", "mort", "");
+	Spell->Mana = 620;           // Higher than other ball spells
+	Spell->Level = 45;           // 
+	Spell->RuneGr = 79;          // Same group as other runes
+	Spell->RuneNr = 7;           // Gr 79 and Nr 7 = TypeID 3154
+	Spell->Flags = 9;            // Rune spell flag
+	Spell->Amount = 1;
+	Spell->RuneLevel = 10;
+	Spell->SoulPoints = 6;
+	Spell->Comment = "Death Cloud";
 
 }
 
