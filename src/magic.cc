@@ -270,6 +270,7 @@ void TStrengthImpact::handleCreature(TCreature *Victim) {
 
   int Skills = this->Skills;
   int Duration = this->Duration;
+  bool SkillsChanged = false;
   for (int SkillNr = 6; SkillNr <= 11; SkillNr += 1) {
     if ((Skills & 1) == 0 && (SkillNr == SKILL_SWORD || SkillNr == SKILL_CLUB ||
                               SkillNr == SKILL_AXE || SkillNr == SKILL_SWORD)) {
@@ -291,6 +292,15 @@ void TStrengthImpact::handleCreature(TCreature *Victim) {
       Skill->SetMDAct((Skill->Act * Percent) / 100);
     }
     Victim->SetTimer(SkillNr, Duration, 1, 1, -1);
+	SkillsChanged = true;
+  }
+
+  // Notify client of skill changes, similar to how equipment skill bonuses work
+  if(SkillsChanged && Victim->Type == PLAYER){
+	SendPlayerSkills(Victim->Connection);
+	// Since we're modifying combat skills, use CREATURE_SPEED_CHANGED notification
+	// in line with pattern used in teleport spell and equipment notifications
+	AnnounceChangedCreature(Victim->ID, CREATURE_SPEED_CHANGED);
   }
 }
 
