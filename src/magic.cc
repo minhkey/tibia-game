@@ -272,8 +272,9 @@ void TStrengthImpact::handleCreature(TCreature *Victim) {
   int Duration = this->Duration;
   bool SkillsChanged = false;
   for (int SkillNr = 6; SkillNr <= 11; SkillNr += 1) {
+	// SKILL_SWORD appeared twice here - should be SKILL_FIST?
     if ((Skills & 1) == 0 && (SkillNr == SKILL_SWORD || SkillNr == SKILL_CLUB ||
-                              SkillNr == SKILL_AXE || SkillNr == SKILL_SWORD)) {
+                              SkillNr == SKILL_AXE || SkillNr == SKILL_FIST)) {
       continue;
     }
 
@@ -282,6 +283,12 @@ void TStrengthImpact::handleCreature(TCreature *Victim) {
     }
 
     if ((Skills & 4) == 0 && SkillNr == SKILL_SHIELDING) {
+      continue;
+    }
+
+	// Previously bitmask 4 affected both fist fighting and shielding,
+	// so need to exclude fist fighting here
+	if ((Skills & 8) == 0 && SkillNr == SKILL_FIST) {
       continue;
     }
 
