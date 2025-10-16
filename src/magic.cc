@@ -3854,12 +3854,36 @@ static void CastSpell(uint32 CreatureID, int SpellNr,
   }
 
   case 107: {
-    // Blood Rage - Increases sword, club, and axe skills by 25% for 15 seconds
-    TStrengthImpact Impact(Actor, 1, 25, 15);
-    ActorShapeSpell(Actor, &Impact, EFFECT_MAGIC_RED);
+    // Blood Rage
+	// Increases melee skills by 35% for 15 seconds
+
+	// Cannot be cast while Divine Protection is active
+	if (Actor->Skills[SKILL_SHIELDING]->MDAct > 0) {
+		throw NOTACCESSIBLE;
+	}
+
+    TStrengthImpact MeleeBoost(Actor, 1, 35, 15);
+    ActorShapeSpell(Actor, &MeleeBoost, EFFECT_MAGIC_RED);
     break;
   }
+
+  case 108: {
+    // Divine Protection
+	// Increases shielding skill by 75% for 15 seconds
+
+	// Cannot be cast while Blood Rage is active
+	TSkill *MeleeSkills[] = {Actor->Skills[SKILL_SWORD], Actor->Skills[SKILL_CLUB], Actor->Skills[SKILL_AXE]};
+	for (int i = 0; i < 3; i++) {
+		if (MeleeSkills[i]->MDAct > 0) {
+			throw NOTACCESSIBLE;
+		}
+	}
+
+    TStrengthImpact ShieldBoost(Actor, 4, 75, 15);
+    ActorShapeSpell(Actor, &ShieldBoost, EFFECT_MAGIC_BLUE);
+    break;
   }
+}
 
   if (IsAggressiveSpell(SpellNr)) {
     Actor->BlockLogout(60, false);
@@ -5466,11 +5490,17 @@ static void InitSpells(void) {
   Spell->SoulPoints = 6;
   Spell->Comment = "Death Cloud";
 
-  Spell = CreateSpell(107, "ut", "ori", "hur", "");
+  Spell = CreateSpell(107, "ut", "ori", "mort", "");
   Spell->Mana = 290;
   Spell->Level = 60;
   Spell->Flags = 0;
   Spell->Comment = "Blood Rage";
+
+  Spell = CreateSpell(108, "ut", "ori", "vita", "");
+  Spell->Mana = 290;
+  Spell->Level = 60;
+  Spell->Flags = 0;
+  Spell->Comment = "Divine Protection";
 }
 
 void InitMagic(void) {
