@@ -3637,6 +3637,13 @@ static void CastSpell(uint32 CreatureID, int SpellNr, const char (*SpellStr)[512
 					EFFECT_FIRE, 5, 30, DAMAGE_FIRE);
 			break;
 		}
+
+		case 107:{
+			// Blood Rage - Increases sword, club, and axe skills by 25% for 15 seconds
+			TStrengthImpact(Actor, 1, 25, 15);
+			GraphicalEffect(Actor->posx, Actor->posy, Actor->posz, EFFECT_MAGIC_RED);
+			break;
+		}
 	}
 
 	if(IsAggressiveSpell(SpellNr)){
@@ -5232,7 +5239,7 @@ static void InitSpells(void){
 
 	Spell = CreateSpell(106, "ad", "ori", "gran", "mort", "");
 	Spell->Mana = 620;           // Higher than other ball spells
-	Spell->Level = 45;           // 
+	Spell->Level = 45;           //
 	Spell->RuneGr = 79;          // Same group as other runes
 	Spell->RuneNr = 7;           // Gr 79 and Nr 7 = TypeID 3154
 	Spell->Flags = 9;            // Rune spell flag
@@ -5240,6 +5247,12 @@ static void InitSpells(void){
 	Spell->RuneLevel = 10;
 	Spell->SoulPoints = 6;
 	Spell->Comment = "Death Cloud";
+
+	Spell = CreateSpell(107, "ut", "ori", "hur", "");
+	Spell->Mana = 290;
+	Spell->Level = 60;
+	Spell->Flags = 0;
+	Spell->Comment = "Blood Rage";
 
 }
 
