@@ -4553,10 +4553,9 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest) {
 
     case 36: {
       // Mortal Strike
-      // Base damage 2x that of explosion runes with 0.5x variation
-      int Damage = ComputeDamage(Actor, SpellNr, 120, 20);
-      Combat(Actor, Dest, 0, 0, Damage, EFFECT_DEATH, ANIMATION_DEATH,
-             DAMAGE_PHYSICAL);
+      // Base damage 1.5x that of explosion runes with same variation
+      int Damage = ComputeDamage(Actor, SpellNr, 90, 40);
+      Combat(Actor, Dest, 0, 0, Damage, EFFECT_DEATH, ANIMATION_DEATH, DAMAGE_PHYSICAL);
       break;
     }
 
