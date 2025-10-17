@@ -4587,8 +4587,12 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest) {
 
 	case 110: {
       // Restore mana
-      int Amount = ComputeDamage(NULL, 0, 300, 150); // ~3x regular mana potion
-      RefreshMana(Actor, 0, 0, Amount);
+	  if (Target == NULL) {
+        throw NOCREATURE;
+      }
+
+      int Amount = ComputeDamage(NULL, 0, 250, 30); // same as UH
+      RefreshMana(Target, 0, 0, Amount);
       break;
     }
 
@@ -5038,7 +5042,7 @@ static void InitSpells(void) {
   Spell->Flags = 1;      // Rune spell flag
   Spell->Amount = 1;
   Spell->RuneLevel = 10;
-  Spell->SoulPoints = 5;
+  Spell->SoulPoints = 4;
   Spell->Comment = "Mortal Strike";
 
   Spell = CreateSpell(37, "al", "ani", "para", "");
