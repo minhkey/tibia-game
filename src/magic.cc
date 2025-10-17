@@ -4638,15 +4638,14 @@ void DrinkPotion(uint32 CreatureID, Object Obj) {
     int Amount = ComputeDamage(NULL, 0, 100, 50);
     RefreshMana(Player, 0, 0, Amount);
   } else if (LiquidType == LIQUID_LIFE) {
-    // Great Mana Potion - provides enhanced mana restoration
-    int Amount = ComputeDamage(NULL, 0, 300, 150); // ~3x regular mana potion
-    RefreshMana(Player, 0, 0, Amount);
+	int Amount = ComputeDamage(NULL, 0, 50, 25);
+	Heal(Player, 0, 0, Amount);
   } else {
     error("DrinkPotion: Objekt enthält keinen Zaubertrank.\n");
     throw ERROR;
   }
 
-  Delete(Obj, -1); // Destroy the bottle completely
+ 	Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
 }
 
 // Magic Init Functions
