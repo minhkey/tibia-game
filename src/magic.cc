@@ -4591,7 +4591,9 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest) {
         throw NOCREATURE;
       }
 
-      int Amount = ComputeDamage(NULL, 0, 250, 30); // same as UH
+	  // Note: A mana fluid costs 55 gp and gives 50-150 mana,
+	  // this is double that and should cost 110 gp (10k for 99x with discount)
+	  int Amount = ComputeDamage(NULL, 0, 200, 100);
       RefreshMana(Target, 0, 0, Amount);
       break;
     }
