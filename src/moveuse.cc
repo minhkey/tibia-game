@@ -1755,7 +1755,7 @@ void UseLiquidContainer(uint32 CreatureID, Object Obj, Object Dest){
 			throw NOROOM;
 		}
 
-		Delete(Obj, -1); // Destroy the vial completely
+		Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
 		CreatePool(GetMapContainer(DestX, DestY, DestZ),
 				GetSpecialObject(BLOOD_POOL), LiquidType);
 		return;
@@ -1776,7 +1776,7 @@ void UseLiquidContainer(uint32 CreatureID, Object Obj, Object Dest){
 
 		case LIQUID_WINE:
 		case LIQUID_BEER:{
-			Delete(Obj, -1); // Destroy the vial completely
+			Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
 			int DrunkLevel = Player->Skills[SKILL_DRUNKEN]->TimerValue();
 			if(DrunkLevel < 5){
 				Player->SetTimer(SKILL_DRUNKEN, (DrunkLevel + 1), 120, 120, -1);
@@ -1786,14 +1786,14 @@ void UseLiquidContainer(uint32 CreatureID, Object Obj, Object Dest){
 		}
 
 		case LIQUID_SLIME:{
-			Delete(Obj, -1); // Destroy the vial completely
+			Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
 			Player->Damage(NULL, 200, DAMAGE_POISON_PERIODIC);
 			Talk(CreatureID, TALK_SAY, NULL, "Urgh!", false);
 			break;
 		}
 
 		case LIQUID_URINE:{
-			Delete(Obj, -1); // Destroy the vial completely
+			Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
 			Talk(CreatureID, TALK_SAY, NULL, "Urgh!", false);
 			break;
 		}
@@ -1806,13 +1806,13 @@ void UseLiquidContainer(uint32 CreatureID, Object Obj, Object Dest){
 		}
 
 		case LIQUID_LEMONADE:{
-			Delete(Obj, -1); // Destroy the vial completely
+			Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
 			Talk(CreatureID, TALK_SAY, NULL, "Mmmh.", false);
 			break;
 		}
 
 		default:{
-			Delete(Obj, -1); // Destroy the vial completely
+			Change(Obj, CONTAINERLIQUIDTYPE, LIQUID_NONE);
 			Talk(CreatureID, TALK_SAY, NULL, "Gulp.", false);
 			break;
 		}
