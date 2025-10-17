@@ -4585,6 +4585,13 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest) {
       break;
     }
 
+	case 110: {
+      // Restore mana
+      int Amount = ComputeDamage(NULL, 0, 300, 150); // ~3x regular mana potion
+      RefreshMana(Actor, 0, 0, Amount);
+      break;
+    }
+
     default: {
       error("UseMagicItem: Spell %d noch nicht implementiert.\n", SpellNr);
       throw ERROR;
@@ -5025,14 +5032,14 @@ static void InitSpells(void) {
   Spell->Comment = "Get Item";
 
   Spell = CreateSpell(36, "ad", "ori", "mort", "");
-  Spell->Mana = 1000;    // Mana cost
-  Spell->Level = 65;     // Level requirement
-  Spell->RuneGr = 79;    // Same group as other runes
+  Spell->Mana = 1000;
+  Spell->Level = 65;
+  Spell->RuneGr = 79;
   Spell->RuneNr = 3;     // Gr 79, Nr 3 = TypeID 3150 (see conversion.lst)
   Spell->Flags = 1;      // Rune spell flag
-  Spell->Amount = 1;     // 2 charges per rune
-  Spell->RuneLevel = 10; // Magic level requirement to use
-  Spell->SoulPoints = 5; // Soul cost
+  Spell->Amount = 1;
+  Spell->RuneLevel = 10;
+  Spell->SoulPoints = 5;
   Spell->Comment = "Mortal Strike";
 
   Spell = CreateSpell(37, "al", "ani", "para", "");
@@ -5521,6 +5528,17 @@ static void InitSpells(void) {
   Spell->Level = 65;
   Spell->Flags = 7;
   Spell->Comment = "Focus Strike";
+
+  Spell = CreateSpell(110, "ad", "ura", "mas", "");
+  Spell->Mana = 400;
+  Spell->Level = 60;
+  Spell->RuneGr = 79;
+  Spell->RuneNr = 40;  // Gr 79 and Nr 40 = TypeID 3187
+  Spell->Flags = 8;
+  Spell->Amount = 1;
+  Spell->RuneLevel = 10;
+  Spell->SoulPoints = 6;
+  Spell->Comment = "Restore Mana";
 
 }
 
