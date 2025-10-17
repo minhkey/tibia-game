@@ -3750,13 +3750,11 @@ static void CastSpell(uint32 CreatureID, int SpellNr,
   }
 
   case 56: {
-    // Great Mass Healing - Enhanced version with 4x healing for balanced mana
-    // efficiency
+    // Great Mass Healing
+	// Enhanced version with 4x healing for balanced mana efficiency
     int Amount =
-        ComputeDamage(Actor, SpellNr, 800,
-                      160); // 4x regular mass healing (200,40 -> 800,160)
-    MassHeal(Actor, Actor->CrObject, ManaPoints, SoulPoints, Amount,
-             6); // Larger radius (4 -> 6)
+        ComputeDamage(Actor, SpellNr, 800, 160); // 4x regular mass healing (200,40 -> 800,160)
+    MassHeal(Actor, Actor->CrObject, ManaPoints, SoulPoints, Amount, 6); // Larger radius (4 -> 6)
     break;
   }
 
@@ -3888,6 +3886,16 @@ static void CastSpell(uint32 CreatureID, int SpellNr,
 
     TStrengthImpact ShieldBoost(Actor, 4, 75, 15);
     ActorShapeSpell(Actor, &ShieldBoost, EFFECT_MAGIC_BLUE);
+    break;
+  }
+
+  case 109: {
+	// Forcus Strike
+	// Stronger than berserk but only affects one tile in front of player,
+	// uses 2x level mana
+    int Level = Actor->Skills[SKILL_LEVEL]->Get();
+    int Damage = (Level * ComputeDamage(Actor, SpellNr, 100, 20)) / 25;
+	AngleCombat(Actor, Level * 2, 0, Damage, EFFECT_BONE_HIT, 1, 0, DAMAGE_PHYSICAL);
     break;
   }
 }
@@ -5508,6 +5516,13 @@ static void InitSpells(void) {
   Spell->Level = 60;
   Spell->Flags = 0;
   Spell->Comment = "Divine Protection";
+
+  Spell = CreateSpell(109, "ex", "ori", "hur");
+  Spell->Mana = 0;
+  Spell->Level = 65;
+  Spell->Flags = 7;
+  Spell->Comment = "Focus Strike";
+
 }
 
 void InitMagic(void) {
