@@ -400,19 +400,15 @@ void TCombat::SetAttackDest(uint32 TargetID, bool Follow){
 			}
 		}
 
-		if(WorldType == NON_PVP){
-			if(!Master->IsPeaceful() || !Target->IsPeaceful()){
-				if(Target->Type == NPC){
-					this->StopAttack(0);
-					throw ATTACKNOTALLOWED;
-				}
-			}
+		if(Target->Type == NPC){
+			this->StopAttack(0);
+			throw ATTACKNOTALLOWED;
+		}
 
-			if(Master->Type == PLAYER){
-				if(Target->Type == NPC || !CheckRight(Master->ID, ATTACK_EVERYWHERE)){
-					this->StopAttack(0);
-					throw ATTACKNOTALLOWED;
-				}
+		if(WorldType == NON_PVP && Master->IsPeaceful() && Target->IsPeaceful()){
+			if(Master->Type != PLAYER || !CheckRight(Master->ID, ATTACK_EVERYWHERE)){
+				this->StopAttack(0);
+				throw ATTACKNOTALLOWED;
 			}
 		}
 	}
