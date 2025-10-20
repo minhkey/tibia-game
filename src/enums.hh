@@ -181,10 +181,10 @@ enum EffectType: int {
 	EFFECT_MANA_HIT				= 2,
 	EFFECT_POFF					= 3,
 	EFFECT_BLOCK_HIT			= 4,
-	EFFECT_FIRE_EXPLOSION		= 5,
-	EFFECT_FIRE_BURST			= 6, // Actually teleport animation
-	EFFECT_FIRE					= 7, // "Bigger" than 5
-	// Effect 8 is a yellow poison animation in ObjectBuilder
+	EFFECT_EXPLOSION		    = 5,
+	EFFECT_FIRE_BLAST			= 6,
+	EFFECT_FIRE_BURST    		= 7, // "Bigger" than 5
+	EFFECT_REBUKE               = 8, // Effect 8 is a yellow poison animation in ObjectBuilder
 	EFFECT_POISON				= 9,
 	EFFECT_BONE_HIT				= 10,
 	EFFECT_ENERGY				= 11,
@@ -192,17 +192,16 @@ enum EffectType: int {
 	EFFECT_MAGIC_BLUE			= 13,
 	EFFECT_MAGIC_RED			= 14,
 	EFFECT_MAGIC_GREEN			= 15,
-	EFFECT_FIRE_HIT				= 16,
+	EFFECT_FIRE 				= 16,
 	EFFECT_POISON_HIT			= 17,
 	EFFECT_DEATH				= 18,
-	// These were not here originally but are present in ObjectBuilder
-	EFFECT_NOTES_GREEN          = 19,
-	EFFECT_NOTES_RED            = 20,
-	EFFECT_POISON_POFF          = 21,
-	EFFECT_NOTES_YELLOW         = 22,
-	EFFECT_NOTES_PURPLE         = 23,
-	EFFECT_NOTES_BLUE           = 24,
-	EFFECT_NOTES_WHITE          = 25,
+	EFFECT_MELODY_GREEN         = 19,
+	EFFECT_MELODY_RED           = 20,
+	EFFECT_POISON_BURST         = 21,
+	EFFECT_MELODY_YELLOW        = 22,
+	EFFECT_MELODY_PURPLE        = 23,
+	EFFECT_MELODY_BLUE          = 24,
+	EFFECT_MELODY_WHITE         = 25,
 	// These are custom effects added by me, if not present in .dat/.spr
 	// files the game will most likely crash
 	EFFECT_DARK_CLOUD           = 26,

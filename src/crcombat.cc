@@ -830,7 +830,7 @@ void TCombat::DistanceAttack(TCreature *Target){
 		int Damage = ComputeDamage(Master, 0, EffectStrength, EffectStrength);
 		TDamageImpact Impact(Master, DAMAGE_PHYSICAL, Damage, false);
 		CircleShapeSpell(Master, DropX, DropY, DropZ, INT_MAX,
-				ANIMATION_NONE, 2, &Impact, EFFECT_FIRE);
+				ANIMATION_NONE, 2, &Impact, EFFECT_FIRE_BURST);
 	}
 
 	try{

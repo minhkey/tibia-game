@@ -707,7 +707,7 @@ int TCreature::Damage(TCreature *Attacker, int Damage, int DamageType){
 				break;
 			}
 			case BT_FIRE:{
-				HitEffect = EFFECT_FIRE_HIT;
+				HitEffect = EFFECT_BLOOD_HIT;
 				TextColor = COLOR_ORANGE;
 				break;
 			}
@@ -726,7 +726,7 @@ int TCreature::Damage(TCreature *Attacker, int Damage, int DamageType){
 		HitEffect = EFFECT_POISON;
 		TextColor = COLOR_LIGHTGREEN;
 	}else if(DamageType == DAMAGE_FIRE){
-		HitEffect = EFFECT_FIRE_HIT;
+		HitEffect = EFFECT_FIRE;
 		TextColor = COLOR_ORANGE;
 	}else if(DamageType == DAMAGE_ENERGY){
 		HitEffect = EFFECT_ENERGY_HIT;
