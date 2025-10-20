@@ -3861,7 +3861,6 @@ static void CastSpell(uint32 CreatureID, int SpellNr,
   case 107: {
     // Blood Rage
 	// Increases melee skills by 35% for 15 seconds
-
 	// Cannot be cast while Divine Protection is active
 	if (Actor->Skills[SKILL_SHIELDING]->MDAct > 0) {
 		throw NOTACCESSIBLE;
@@ -3875,7 +3874,6 @@ static void CastSpell(uint32 CreatureID, int SpellNr,
   case 108: {
     // Divine Protection
 	// Increases shielding skill by 75% for 15 seconds
-
 	// Cannot be cast while Blood Rage is active
 	TSkill *MeleeSkills[] = {Actor->Skills[SKILL_SWORD], Actor->Skills[SKILL_CLUB], Actor->Skills[SKILL_AXE]};
 	for (int i = 0; i < 3; i++) {
@@ -4586,7 +4584,7 @@ void UseMagicItem(uint32 CreatureID, Object Obj, Object Dest) {
     }
 
 	case 110: {
-      // Restore mana
+      // Divine Healing
 	  if (Target == NULL) {
         throw NOCREATURE;
       }
@@ -5041,8 +5039,8 @@ static void InitSpells(void) {
   Spell->Level = 65;
   Spell->RuneGr = 79;
   Spell->RuneNr = 3;     // Gr 79, Nr 3 = TypeID 3150 (see conversion.lst)
-  Spell->Flags = 1;      // Rune spell flag
-  Spell->Amount = 1;
+  Spell->Flags = 1;
+  Spell->Amount = 2;
   Spell->RuneLevel = 10;
   Spell->SoulPoints = 4;
   Spell->Comment = "Mortal Strike";
@@ -5543,7 +5541,7 @@ static void InitSpells(void) {
   Spell->Amount = 1;
   Spell->RuneLevel = 10;
   Spell->SoulPoints = 6;
-  Spell->Comment = "Restore Mana";
+  Spell->Comment = "Divine Healing";
 
 }
 
