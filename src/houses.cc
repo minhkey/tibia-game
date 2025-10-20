@@ -653,7 +653,7 @@ void ShowNameDoor(Object Door, TPlayer *Player, char *Buffer){
 	print(3, "Editiere NameDoor.\n");
 
 	// TODO(fusion): Check for `NAMEDOOR` flag as well?
-	if(Door.getObjectType().getFlag(TEXT)){
+	if(!Door.getObjectType().getFlag(TEXT)){
 		error("ShowNameDoor: Tür auf Koordinate [%d,%d,%d] enthält keinen Text.\n",
 				DoorX, DoorY, DoorZ);
 		throw ERROR;
