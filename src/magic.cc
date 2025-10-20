@@ -322,7 +322,7 @@ void TStrengthImpact::handleCreature(TCreature *Victim){
 				&& (SkillNr == SKILL_SWORD
 					|| SkillNr == SKILL_CLUB
 					|| SkillNr == SKILL_AXE
-					|| SkillNr == SKILL_SWORD)){
+					|| SkillNr == SKILL_FIST)){
 			continue;
 		}
 
