@@ -26,13 +26,13 @@ void TConnection::Process(void){
 		}
 
 		uint32 LastAction = (RoundNr - this->TimeStampAction);
-		if(LastAction == 900 && !CheckRight(this->CharacterID, NO_LOGOUT_BLOCK)){
+		if(LastAction == 82800 && !CheckRight(this->CharacterID, NO_LOGOUT_BLOCK)){
 			SendMessage(this, TALK_ADMIN_MESSAGE,
-					"You have been idle for %d minutes. You will be disconnected"
-					" in one minute if you are still idle then.", 15);
+					"You have been idle for %d hours. You will be disconnected"
+					" in one hour if you are still idle then.", 23);
 		}
 
-		if(LastAction >= 960 && !CheckRight(this->CharacterID, NO_LOGOUT_BLOCK)){
+		if(LastAction >= 86400 && !CheckRight(this->CharacterID, NO_LOGOUT_BLOCK)){
 			this->Logout(0, true);
 		}else if(!GameRunning() || !this->ConnectionIsOk || (LastCommand >= 90)){
 			this->Logout(0, false);
