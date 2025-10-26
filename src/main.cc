@@ -68,12 +68,12 @@ static void SigHupHandler(int signr){
 }
 
 static void SigAbortHandler(int signr){
-	print(1, "SigAbortHandler: schalte Writer-Thread ab.\n");
+	print(1, "SigAbortHandler: shutting down writer thread.\n");
 	AbortWriter();
 }
 
 static void DefaultHandler(int signr){
-	print(1, "DefaultHandler: Beende Game-Server (SigNr. %d: %s).\n",
+	print(1, "DefaultHandler: Ending game server (SigNr. %d: %s).\n",
 			signr, sigdescr_np(signr));
 
 	SigHandler(SIGINT, SIG_IGN);
@@ -129,7 +129,7 @@ static void InitSignalHandler(void){
 	Count += (SigHandler(SIGWINCH, SIG_IGN) != SIG_ERR);
 	Count += (SigHandler(SIGPOLL, SIG_IGN) != SIG_ERR);
 	Count += (SigHandler(SIGPWR, DefaultHandler) != SIG_ERR);
-	print(1, "InitSignalHandler: %d Signalhandler eingerichtet (Soll=%d)\n", Count, 0x1c);
+	print(1, "InitSignalHandler: %d signal handlers set up (Should=%d)\n", Count, 0x1c);
 }
 
 static void ExitSignalHandler(void){
@@ -220,7 +220,7 @@ static void LockGame(void){
 void LoadWorldConfig(void){
 	TQueryManagerConnection Connection(KB(16));
 	if(!Connection.isConnected()){
-		error("LoadWorldConfig: Kann nicht zum Query-Manager verbinden.\n");
+		error("LoadWorldConfig: Cannot connect to query manager.\n");
 		throw "cannot connect to querymanager";
 	}
 
@@ -231,7 +231,7 @@ void LoadWorldConfig(void){
 			&MaxPlayers, &PremiumPlayerBuffer,
 			&MaxNewbies, &PremiumNewbieBuffer);
 	if(Ret != 0){
-		error("LoadWorldConfig: Kann Konfigurationsdaten nicht holen.\n");
+		error("LoadWorldConfig: Cannot get configuration data.\n");
 		throw "cannot load world config";
 	}
 
@@ -267,7 +267,7 @@ static void InitAll(void){
 		InitTime();
 		ApplyPatches();
 	}catch(const char *str){
-		error("Initialisierungsfehler: %s\n", str);
+		error("Initialization error: %s\n", str);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -299,10 +299,10 @@ static void ProcessCommand(void){
 			if(Buffer != NULL){
 				BroadcastMessage(TALK_ADMIN_MESSAGE, "%s", Buffer);
 			}else{
-				error("ProcessCommand: Text für Broadcast ist NULL.\n");
+				error("ProcessCommand: Text for broadcast is NULL.\n");
 			}
 		}else{
-			error("ProcessCommand: Unbekanntes Kommando %d.\n", Command);
+			error("ProcessCommand: Unknown command %d.\n", Command);
 		}
 
 		SetCommand(0, NULL);
@@ -432,7 +432,7 @@ static void AdvanceGame(int Delay){
 	}
 
 	if(Delay > Beat){
-		Log("lag", "Verzögerung %d msec.\n", Delay);
+		Log("lag", "Delay %d msec.\n", Delay);
 	}
 
 	// TODO(fusion): Why would we delay creature movement yet another beat?
@@ -441,7 +441,7 @@ static void AdvanceGame(int Delay){
 		Lag = false;
 	}else{
 		if(!Lag && RoundNr > 10){
-			error("AdvanceGame: Keine Kreaturbewegung wegen Lag (Verzögerung: %d msec).\n", Delay);
+			error("AdvanceGame: No creature movement due to lag (delay: %d msec).\n", Delay);
 		}
 		Lag = true;
 	}
@@ -462,7 +462,7 @@ static void LaunchGame(void){
 	SigHandler(SIGUSR1, SigUsr1Handler);
 	StartGame();
 
-	print(1, "LaunchGame: Game-Server ist bereit (Pid=%d, Tid=%d).\n", getpid(), gettid());
+	print(1, "LaunchGame: Game server is ready (Pid=%d, Tid=%d).\n", getpid(), gettid());
 
 	// IMPORTANT(fusion): In general signal handlers can execute on any thread in
 	// the process group but the design of the server is to use signals directed
@@ -554,17 +554,17 @@ int main(int argc, char **argv){
 	try{
 		LaunchGame();
 	}catch(RESULT r){
-		error("main: Nicht abgefangene Exception %d.\n", r);
+		error("main: Uncaught exception %d.\n", r);
 	}catch(const char *str){
-		error("main: Nicht abgefangene Exception \"%s\".\n", str);
+		error("main: Uncaught exception \"%s\".\n", str);
 	}catch(const std::exception &e){
-		error("main: Nicht abgefangene Exception %s.\n", e.what());
+		error("main: Uncaught exception %s.\n", e.what());
 	}catch(...){
-		error("main: Nicht abgefangene Exception unbekannten Typs.\n");
+		error("main: Uncaught exception of unknown type.\n");
 	}
 
 	if(!Reboot){
-		print(1, "Beende Game-Server...\n");
+		print(1, "Shutting down game server...\n");
 	}else{
 		UnlockGame();
 
@@ -572,10 +572,10 @@ int main(int argc, char **argv){
 		snprintf(FileName, sizeof(FileName), "%s/reboot-daily", BINPATH);
 		if(FileExists(FileName)){
 			ExitAll();
-			print(1, "Starte Game-Server neu...\n");
+			print(1, "Starting game server again...\n");
 			execv(FileName, argv);
 		}else{
-			print(1, "Reboot-Skript existiert nicht.\n");
+			print(1, "Reboot script does not exist.\n");
 		}
 	}
 
