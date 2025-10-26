@@ -35,14 +35,14 @@ int TSkill::GetProgress(void){
 
 		// TODO(fusion): This feels too much for reporting a mostly *impossible* error.
 		if(Result < 0 || Result > 100){
-			error("TSkill::GetProgress: Berechnungsfehler Exp %d, Last %d, Next %d, Prozent %d.\n",
+			error("TSkill::GetProgress: Calculation error Exp %d, Last %d, Next %d, Percent %d.\n",
 					this->Exp, this->LastLevel, this->NextLevel, Result);
 
 			const char *MasterName = "(Unknown";
 			if(this->Master != NULL){
 				MasterName = this->Master->Name;
 			}
-			error("# Spieler %s - Skill %d\n", MasterName, this->SkNr);
+			error("# Player %s - Skill %d\n", MasterName, this->SkNr);
 			Result = 0;
 		}
 	}
@@ -251,7 +251,7 @@ void TSkill::Reset(void){
 //==============================================================================
 void TSkillLevel::Increase(int Amount){
 	if(Amount < 0){
-		error("TSkillLevel::Increase: Amount negativ (%d).\n", Amount);
+		error("TSkillLevel::Increase: Amount negative (%d).\n", Amount);
 		return;
 	}
 
@@ -268,7 +268,7 @@ void TSkillLevel::Increase(int Amount){
 		this->NextLevel = this->GetExpForLevel(this->Act + 1);
 		if(this->NextLevel < 0){
 			// BUG(fusion): We don't check if `Master` is valid here?
-			error("TSkillLevel::Increase: Skill vor Überlauf (%s, Skill %d).\n", this->Master->Name, this->SkNr);
+			error("TSkillLevel::Increase: Skill before overflow (%s, Skill %d).\n", this->Master->Name, this->SkNr);
 			this->NextLevel = this->Exp;
 			this->Exp -= 1000000;
 			break;
@@ -281,7 +281,7 @@ void TSkillLevel::Increase(int Amount){
 	}
 
 	if(this->Master == NULL){
-		error("TSkillLevel::Increase: GetMaster liefert NULL zurueck.\n");
+		error("TSkillLevel::Increase: GetMaster returns NULL.\n");
 		return;
 	}
 
@@ -292,13 +292,13 @@ void TSkillLevel::Increase(int Amount){
 
 void TSkillLevel::Decrease(int Amount){
 	if(Amount < 0){
-		error("TSkillLevel::Decrease: Amount negativ (%d).\n", Amount);
+		error("TSkillLevel::Decrease: Amount negative (%d).\n", Amount);
 		return;
 	}
 
 	// TODO(fusion): This is some weird ass comparison.
 	if(Amount > this->Exp && this->Exp > 100000){
-		error("TSkillLevel::Decrease: Amount zu gross(%d).\n", Amount);
+		error("TSkillLevel::Decrease: Amount too large(%d).\n", Amount);
 		return;
 	}
 
@@ -324,7 +324,7 @@ void TSkillLevel::Decrease(int Amount){
 	}
 
 	if(this->Master == NULL){
-		error("TSkillLevel::Decrease: GetMaster liefert NULL zurueck.\n");
+		error("TSkillLevel::Decrease: GetMaster returns NULL.\n");
 		return;
 	}
 
@@ -335,17 +335,17 @@ void TSkillLevel::Decrease(int Amount){
 
 int TSkillLevel::GetExpForLevel(int Level){
 	if(Level < 1){
-		error("TSkillLevel::GetExpForLevel: Ungültiger Level %d.\n", Level);
+		error("TSkillLevel::GetExpForLevel: Invalid level %d.\n", Level);
 		return 0;
 	}
 
 	if(this->Delta <= 0){
-		error("TSkillLevel::GetExpForLevel: Ungültiger Delta-Wert %d.\n", this->Delta);
+		error("TSkillLevel::GetExpForLevel: Invalid delta value %d.\n", this->Delta);
 		return 0;
 	}
 
 	if(Level > 500){
-		error("TSkillLevel::GetExpForLevel: Level=%d; Formel gegen Überlauf sichern.\n", Level);
+		error("TSkillLevel::GetExpForLevel: Level=%d; Secure formula against overflow.\n", Level);
 		return -1; // TODO(fusion): Shouldn't this be 0?
 	}
 
@@ -354,7 +354,7 @@ int TSkillLevel::GetExpForLevel(int Level){
 
 bool TSkillLevel::Jump(int Range){
 	if(this->Master == NULL){
-		error("TSkillLevel::Jump: GetMaster liefert NULL zurueck!\n");
+		error("TSkillLevel::Jump: GetMaster returns NULL!\n");
 		return false;
 	}
 
@@ -385,7 +385,7 @@ bool TSkillLevel::Jump(int Range){
 //==============================================================================
 void TSkillProbe::Increase(int Amount){
 	if(Amount < 0){
-		error("TSkillProbe::Increase: Amount negativ (%d).\n", Amount);
+		error("TSkillProbe::Increase: Amount negative (%d).\n", Amount);
 		return;
 	}
 
@@ -402,7 +402,7 @@ void TSkillProbe::Increase(int Amount){
 		this->NextLevel = this->GetExpForLevel(this->Act + 1);
 		if(this->NextLevel < 0){
 			// BUG(fusion): We don't check if `Master` is valid here?
-			error("TSkillProbe::Increase: Skill vor Überlauf (%s, Skill %d).\n", this->Master->Name, this->SkNr);
+			error("TSkillProbe::Increase: Skill before overflow (%s, Skill %d).\n", this->Master->Name, this->SkNr);
 			this->NextLevel = this->Exp;
 			this->Exp -= 1000;
 			break;
@@ -429,7 +429,7 @@ void TSkillProbe::Increase(int Amount){
 
 void TSkillProbe::Decrease(int Amount){
 	if(Amount < 0){
-		error("TSkillProbe::Decrease: Amount negativ (%d).\n", Amount);
+		error("TSkillProbe::Decrease: Amount negative (%d).\n", Amount);
 		return;
 	}
 
@@ -471,12 +471,12 @@ void TSkillProbe::Decrease(int Amount){
 
 int TSkillProbe::GetExpForLevel(int Level){
 	if(Level < 0 || Level < this->Min){
-		error("TSkillProbe::GetExpForLevel: Ungültiger Level %d.\n", Level);
+		error("TSkillProbe::GetExpForLevel: Invalid level %d.\n", Level);
 		return 0;
 	}
 
 	if(this->Delta <= 0){
-		error("TSkillProbe::GetExpForLevel: Ungültiger Delta-Wert %d.\n", this->Delta);
+		error("TSkillProbe::GetExpForLevel: Invalid delta value %d.\n", this->Delta);
 		return 0;
 	}
 
@@ -484,8 +484,8 @@ int TSkillProbe::GetExpForLevel(int Level){
 	if(FactorPercent < 1050){
 		if(FactorPercent != 1000){
 			const char *MasterName = (this->Master != NULL ? this->Master->Name : "---");
-			error("TSkillProbe::GetExpForLevel: Ungültiger FactorPercent-Wert %d bei %s."
-					" Rechne mit 1000 weiter.\n", FactorPercent, MasterName);
+			error("TSkillProbe::GetExpForLevel: Invalid FactorPercent value %d at %s."
+					" Continuing calculation with 1000.\n", FactorPercent, MasterName);
 		}
 		return (Level - this->Min) * this->Delta;
 	}
@@ -573,7 +573,7 @@ bool TSkillProbe::SetTimer(int Cycle, int Count, int MaxCount, int AdditionalVal
 	this->MaxCount = MaxCount;
 
 	if(this->Master == NULL){
-		error("TSkillProbe::SetTimer: GetMaster liefert NULL zurueck!\n");
+		error("TSkillProbe::SetTimer: GetMaster returns NULL!\n");
 		return false;
 	}
 
@@ -588,7 +588,7 @@ bool TSkillProbe::SetTimer(int Cycle, int Count, int MaxCount, int AdditionalVal
 bool TSkillProbe::Jump(int Range){
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillProbe::Jump: GetMaster liefert NULL zurueck!\n");
+		error("TSkillProbe::Jump: GetMaster returns NULL!\n");
 		return false;
 	}
 
@@ -645,7 +645,7 @@ void TSkillProbe::Event(int Range){
 	if(this->Cycle == 0){
 		TCreature *Master = this->Master;
 		if(Master == NULL){
-			error("TSkillProbe::Event: GetMaster liefert NULL zurueck!\n");
+			error("TSkillProbe::Event: GetMaster returns NULL!\n");
 			return;
 		}
 
@@ -682,7 +682,7 @@ void TSkillAdd::Advance(int Range){
 void TSkillHitpoints::Set(int Value){
 	TCreature *Master = this->Master;
 	if(Master != NULL && Master->IsDead && Value > 0){
-		error("TSkillHitpoints::Set: HP von toter Kreatur sollen erhöht werden.\n");
+		error("TSkillHitpoints::Set: HP of dead creature should be increased.\n");
 		return;
 	}
 
@@ -731,7 +731,7 @@ bool TSkillGoStrength::SetTimer(int Cycle, int Count, int MaxCount, int Addition
 
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillGoStrength::SetTimer: GetMaster liefert NULL zurueck!\n");
+		error("TSkillGoStrength::SetTimer: GetMaster returns NULL!\n");
 		return false;
 	}
 
@@ -749,7 +749,7 @@ void TSkillGoStrength::Event(int Range){
 
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillGoStrength::Event: GetMaster liefert NULL zurueck!\n");
+		error("TSkillGoStrength::Event: GetMaster returns NULL!\n");
 		return;
 	}
 
@@ -796,7 +796,7 @@ int TSkillSoulpoints::TimerValue(void){
 void TSkillSoulpoints::Event(int Range){
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillSoulpoints::Event: GetMaster liefert NULL zurueck!\n");
+		error("TSkillSoulpoints::Event: GetMaster returns NULL!\n");
 		return;
 	}
 
@@ -812,7 +812,7 @@ void TSkillSoulpoints::Event(int Range){
 void TSkillFed::Event(int Range){
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillFed::Event: GetMaster liefert NULL zurueck!\n");
+		error("TSkillFed::Event: GetMaster returns NULL!\n");
 		return;
 	}
 
@@ -868,7 +868,7 @@ void TSkillFed::Event(int Range){
 		}
 
 		default:{
-			error("TSkillFed::Event: Unbekannter Beruf %d.\n", Profession);
+			error("TSkillFed::Event: Unknown profession %d.\n", Profession);
 			break;
 		}
 	}
@@ -897,7 +897,7 @@ bool TSkillLight::SetTimer(int Cycle, int Count, int MaxCount, int AdditionalVal
 
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillLight::SetTimer: GetMaster liefert NULL zurueck!\n");
+		error("TSkillLight::SetTimer: GetMaster returns NULL!\n");
 		return false;
 	}
 
@@ -916,7 +916,7 @@ bool TSkillLight::SetTimer(int Cycle, int Count, int MaxCount, int AdditionalVal
 void TSkillLight::Event(int Range){
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillLight::Event: GetMaster liefert NULL zurueck!\n");
+		error("TSkillLight::Event: GetMaster returns NULL!\n");
 		return;
 	}
 
@@ -932,7 +932,7 @@ bool TSkillIllusion::SetTimer(int Cycle, int Count, int MaxCount, int Additional
 
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillIllusion::SetTimer: GetMaster liefert NULL zurueck!\n");
+		error("TSkillIllusion::SetTimer: GetMaster returns NULL!\n");
 		return false;
 	}
 
@@ -952,7 +952,7 @@ void TSkillIllusion::Event(int Range){
 	if(this->Cycle == 0){
 		TCreature *Master = this->Master;
 		if(Master == NULL){
-			error("TSkillIllusion::Event: GetMaster liefert NULL zurueck!\n");
+			error("TSkillIllusion::Event: GetMaster returns NULL!\n");
 			return;
 		}
 
@@ -1020,7 +1020,7 @@ bool TSkillPoison::SetTimer(int Cycle, int Count, int MaxCount, int AdditionalVa
 void TSkillPoison::Event(int Range){
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillPoison::Event: GetMaster liefert NULL zurueck!\n");
+		error("TSkillPoison::Event: GetMaster returns NULL!\n");
 		return;
 	}
 
@@ -1057,7 +1057,7 @@ void TSkillPoison::Reset(void){
 void TSkillBurning::Event(int Range){
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillBurning::Event: GetMaster liefert NULL zurueck!\n");
+		error("TSkillBurning::Event: GetMaster returns NULL!\n");
 		return;
 	}
 
@@ -1083,7 +1083,7 @@ void TSkillBurning::Event(int Range){
 void TSkillEnergy::Event(int Range){
 	TCreature *Master = this->Master;
 	if(Master == NULL){
-		error("TSkillEnergy::Event: GetMaster liefert NULL zurueck!\n");
+		error("TSkillEnergy::Event: GetMaster returns NULL!\n");
 		return;
 	}
 
@@ -1123,7 +1123,7 @@ TSkillBase::~TSkillBase(void){
 
 bool TSkillBase::NewSkill(uint16 SkillNo, TCreature *Creature){
 	if(SkillNo >= NARRAY(this->Skills)){
-		error("TSkillBase::NewSkill: unbekannte SkillNummer %d\n", SkillNo);
+		error("TSkillBase::NewSkill: unknown skill number %d\n", SkillNo);
 		return false;
 	}
 
@@ -1164,7 +1164,7 @@ bool TSkillBase::NewSkill(uint16 SkillNo, TCreature *Creature){
 
 bool TSkillBase::SetSkills(int Race){
 	if(!IsRaceValid(Race)){
-		error("TSkillBase::SetSkills: Ungültige Rassennummer %d.\n", Race);
+		error("TSkillBase::SetSkills: Invalid race number %d.\n", Race);
 		return false;
 	}
 
@@ -1208,7 +1208,7 @@ void TSkillBase::ProcessSkills(void){
 
 bool TSkillBase::SetTimer(uint16 SkNr, int Cycle, int Count, int MaxCount, int AdditionalValue){
 	if(SkNr >= NARRAY(this->Skills)){
-		error("TSkillBase::SetTimer: Ungueltige SkNr: %d\n", SkNr);
+		error("TSkillBase::SetTimer: Invalid SkNr: %d\n", SkNr);
 		return false;
 	}
 
@@ -1231,7 +1231,7 @@ bool TSkillBase::SetTimer(uint16 SkNr, int Cycle, int Count, int MaxCount, int A
 
 void TSkillBase::DelTimer(uint16 SkNr){
 	if(SkNr >= NARRAY(this->Skills)){
-		error("TSkillBase::DelTimer: Ungueltige SkNr: %d\n", SkNr);
+		error("TSkillBase::DelTimer: Invalid SkNr: %d\n", SkNr);
 		return;
 	}
 
