@@ -1202,7 +1202,7 @@ void SaveSector(char *FileName, int SectorX, int SectorY, int SectorZ){
 		Script.open(FileName);
 		print(1, "Saving sector %d/%d/%d ...\n", SectorX, SectorY, SectorZ);
 
-		Script.writeText("# Tibia - graphical Multi-User-Dungeon");
+		Script.writeText("# Demonax - Graphical Multi-User-Dungeon");
 		Script.writeLn();
 		Script.writeText("# Data for sector ");
 		Script.writeNumber(SectorX);
@@ -1535,7 +1535,7 @@ void PatchSector(int SectorX, int SectorY, int SectorZ, bool FullSector,
 
 	TWriteScriptFile OUT;
 	OUT.open(FileNameBak);
-	OUT.writeText("# Tibia - graphical Multi-User-Dungeon");
+	OUT.writeText("# Demonax - graphical Multi-User-Dungeon");
 	OUT.writeLn();
 	OUT.writeText("# Data for sector ");
 	OUT.writeNumber(SectorX);

@@ -541,7 +541,7 @@ int main(int argc, char **argv){
 		return 2;
 	}
 
-	puts("Tibia Game-Server\n(c) by CIP Productions, 2003.\n");
+	puts("Demonax game server.\n");
 
 	InitAll();
 	atexit(ExitAll);
