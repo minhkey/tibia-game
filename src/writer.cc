@@ -112,7 +112,7 @@ void InitLog(const char *ProtocolName){
 	// NOTE(fusion): `ctime` will already add a new line character.
 	time_t Time = time(NULL);
 	fprintf(File, "-------------------------------------------------------------------------------\n");
-	fprintf(File, "Tibia - Graphical Multi-User-Dungeon\n");
+	fprintf(File, "Demonax - Graphical Multi-User-Dungeon\n");
 	fprintf(File, "%s.log - started %s", ProtocolName, ctime(&Time));
 	fclose(File);
 }

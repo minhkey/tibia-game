@@ -213,11 +213,11 @@ TPlayer::TPlayer(TConnection *Connection, uint32 CharacterID):
 		struct tm LastLogin = GetLocalTimeTM(PlayerData->LastLoginTime);
 		strftime(TimeString, sizeof(TimeString), "%d. %b %Y %X %Z", &LastLogin);
 		SendMessage(Connection, TALK_LOGIN_MESSAGE,
-				"Your last visit in Tibia: %s.", TimeString);
+				"Your last visit in Demonax: %s.", TimeString);
 	}else if(!CheckRight(this->ID, GAMEMASTER_OUTFIT)){
 		Log("game", "Player %s logs in for the first time -> Outfit select.\n", this->Name);
 		SendMessage(Connection, TALK_LOGIN_MESSAGE,
-				"Welcome to Tibia! Please choose your outfit.");
+				"Welcome to Demonax! Please choose your outfit.");
 		SendOutfit(Connection);
 	}
 

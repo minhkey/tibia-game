@@ -719,8 +719,8 @@ TPlayerData *PerformRegistration(TConnection *Connection, char *PlayerName,
 			print(3, "Player does not exist.\n");
 			SendLoginMessage(Connection, LOGIN_MESSAGE_ERROR,
 					"Character doesn't exist.\n"
-					"Create a new character on the Tibia website\n"
-					"at \"www.tibia.com\".", -1);
+					"Create a new character on the Demonax website\n"
+					"at \"www.demonax.eu\".", -1);
 			return NULL;
 		}
 
@@ -728,7 +728,7 @@ TPlayerData *PerformRegistration(TConnection *Connection, char *PlayerName,
 			print(3, "Player was deleted.\n");
 			SendLoginMessage(Connection, LOGIN_MESSAGE_ERROR,
 					"Character doesn't exist.\n"
-					"Create a new character on the Tibia website.", -1);
+					"Create a new character on the Demonax website.", -1);
 			return NULL;
 		}
 
@@ -847,8 +847,8 @@ TPlayerData *PerformRegistration(TConnection *Connection, char *PlayerName,
 		error("PerformRegistration: Player %s has not been assigned to any account yet.\n", PlayerName);
 		SendLoginMessage(Connection, LOGIN_MESSAGE_ERROR,
 				"Character is not assigned to an account.\n"
-				"Perform this on the Tibia website\n"
-				"at \"www.tibia.com\".", -1);
+				"Perform this on the Demonax website\n"
+				"at \"www.demonax.eu\".", -1);
 		return NULL;
 	}
 
@@ -860,7 +860,7 @@ TPlayerData *PerformRegistration(TConnection *Connection, char *PlayerName,
 	if(PremiumAccountActivated){
 		SendLoginMessage(Connection, LOGIN_MESSAGE_PREMIUM,
 				"Your Premium Account is now activated.\n"
-				"Have a lot of fun in Tibia.", -1);
+				"Have a lot of fun in Demonax.", -1);
 	}
 
 	Log("game", "Player %s logs in at Socket %d from %s.\n",
@@ -978,7 +978,7 @@ bool HandleLogin(TConnection *Connection){
 		SendLoginMessage(Connection, LOGIN_MESSAGE_ERROR,
 				"Your terminal version is too old.\n"
 				"Please get a new version at\n"
-				"http://www.tibia.com.", -1);
+				"http://www.demonax.eu.", -1);
 		return false;
 	}
 

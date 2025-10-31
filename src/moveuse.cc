@@ -1933,7 +1933,7 @@ void UseAnnouncer(uint32 CreatureID, Object Obj){
 			}
 
 			if(Player->GetQuestValue(105) != 0){
-				strcat(Help, "\nEmbrace of Tibia");
+				strcat(Help, "\nEmbrace of Demonax");
 				NumBlessings += 1;
 			}
 
