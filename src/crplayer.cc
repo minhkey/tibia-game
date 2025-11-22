@@ -2647,7 +2647,7 @@ void FreePlayerPoolSlot(TPlayerData *Slot){
 		return;
 	}
 
-	print(3, "Gebe Slot von Charakter %u frei.\n", Slot->CharacterID);
+	print(3, "Releasing slot from character %u.\n", Slot->CharacterID);
 	if(Slot->CharacterID == 0){
 		return;
 	}
@@ -2894,7 +2894,7 @@ void ReleasePlayerPoolSlot(TPlayerData *Slot){
 		return;
 	}
 
-	print(3, "Gebe Slot von Spieler %u frei.\n", Slot->CharacterID);
+	print(3, "Releasing slot from player %u.\n", Slot->CharacterID);
 	if(Slot->Locked == 0){
 		error("ReleasePlayerPoolSlot: Slot is not locked.\n");
 		return;
