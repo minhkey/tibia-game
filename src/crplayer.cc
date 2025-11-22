@@ -1157,7 +1157,7 @@ int TPlayer::GetQuestValue(int QuestNr){
 		return 0;
 	}
 
-	print(3, "Wert der Questvariablen %d von %s: %d.\n",
+	print(3, "Quest variable %d from %s has value: %d.\n",
 			QuestNr, this->Name, this->QuestValues[QuestNr]);
 	return this->QuestValues[QuestNr];
 }
