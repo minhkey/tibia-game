@@ -1185,21 +1185,21 @@ void TPlayer::CheckOutfit(void){
 		this->OrgOutfit.Colors[2] = 0;
 		this->OrgOutfit.Colors[3] = 0;
 	}else if(this->Sex == 1){
-		if(this->OrgOutfit.OutfitID >= 128 && this->OrgOutfit.OutfitID <= 134){
+		if(this->OrgOutfit.OutfitID >= 200 && this->OrgOutfit.OutfitID <= 219){
 			return;
 		}
 
-		this->OrgOutfit.OutfitID = 128;
+		this->OrgOutfit.OutfitID = 200;
 		this->OrgOutfit.Colors[0] = 78;
 		this->OrgOutfit.Colors[1] = 69;
 		this->OrgOutfit.Colors[2] = 58;
 		this->OrgOutfit.Colors[3] = 76;
 	}else{
-		if(this->OrgOutfit.OutfitID >= 136 && this->OrgOutfit.OutfitID <= 142){
+		if(this->OrgOutfit.OutfitID >= 252 && this->OrgOutfit.OutfitID <= 271){
 			return;
 		}
 
-		this->OrgOutfit.OutfitID = 136;
+		this->OrgOutfit.OutfitID = 252;
 		this->OrgOutfit.Colors[0] = 78;
 		this->OrgOutfit.Colors[1] = 69;
 		this->OrgOutfit.Colors[2] = 58;

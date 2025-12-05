@@ -1668,16 +1668,17 @@ void SendOutfit(TConnection *Connection){
 		return;
 	}
 
-	uint16 FirstOutfit = (Player->Sex == 1) ? 128 : 136;
-	uint16 LastOutfit  = (Player->Sex == 1) ? 131 : 139;
-	if(CheckRight(Player->ID, PREMIUM_ACCOUNT)){
-		LastOutfit += 3;
-	}
-
 	SendByte(Connection, SV_CMD_OUTFIT);
 	SendOutfit(Connection, Player->OrgOutfit);
+
+	// Send standard outfit range
+	uint16 FirstOutfit = (Player->Sex == 1) ? 200 : 252;
+	uint16 LastOutfit  = (Player->Sex == 1) ? 219 : 271;
+	// All outfits are included in the range (200-219 for males, 252-271 for females)
+	// No premium account restrictions needed
 	SendWord(Connection, FirstOutfit);
 	SendWord(Connection, LastOutfit);
+
 	FinishSendData(Connection);
 }
 

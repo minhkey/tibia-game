@@ -1422,19 +1422,46 @@ void CSetOutfit(TConnection *Connection, TReadBuffer *Buffer){
 	NewOutfit.OutfitID = Buffer->readWord();
 	Buffer->readBytes(NewOutfit.Colors, sizeof(NewOutfit.Colors));
 
-	int FirstOutfit = (Player->Sex == 1) ? 128 : 136;
-	int LastOutfit  = (Player->Sex == 1) ? 131 : 139;
-	if(CheckRight(Player->ID, PREMIUM_ACCOUNT)){
-		LastOutfit += 3;
-	}
-
-	if(NewOutfit.OutfitID < FirstOutfit || NewOutfit.OutfitID > LastOutfit){
-		if(Player->Sex == 1){
-			print(3, "CSetOutfit: Invalid output  %d for males.\n", NewOutfit.OutfitID);
-		}else{
-			print(3, "CSetOutfit: Invalid outfit %d for females.\n", NewOutfit.OutfitID);
+	// Quest-restricted outfits
+	// Male quest outfits: 207-219 require quests 507-519 (outfitID + 300)
+	if(Player->Sex == 1 && NewOutfit.OutfitID >= 207 && NewOutfit.OutfitID <= 219){
+		int requiredQuest = NewOutfit.OutfitID + 300; // 507-519
+		if(Player->GetQuestValue(requiredQuest) < 1){
+			SendMessage(Connection, TALK_FAILURE_MESSAGE,
+				"You have not completed the required quest for this outfit.");
+			print(3, "CSetOutfit: Player %s lacks quest %d for outfit %d.\n",
+				 Player->Name, requiredQuest, NewOutfit.OutfitID);
+			return;
 		}
-		return;
+		// Quest-restricted outfit is allowed - skip standard range validation
+	}
+	// Female quest outfits: 259-271 require quests 559-571 (outfitID + 300)
+	else if(Player->Sex != 1 && NewOutfit.OutfitID >= 259 && NewOutfit.OutfitID <= 271){
+		int requiredQuest = NewOutfit.OutfitID + 300; // 559-571
+		if(Player->GetQuestValue(requiredQuest) < 1){
+			SendMessage(Connection, TALK_FAILURE_MESSAGE,
+				"You have not completed the required quest for this outfit.");
+			print(3, "CSetOutfit: Player %s lacks quest %d for outfit %d.\n",
+				 Player->Name, requiredQuest, NewOutfit.OutfitID);
+			return;
+		}
+		// Quest-restricted outfit is allowed - skip standard range validation
+	}
+	else {
+		// Standard outfit validation for non-quest outfits
+		int FirstOutfit = (Player->Sex == 1) ? 200 : 252;
+		int LastOutfit  = (Player->Sex == 1) ? 219 : 271;
+		// All outfits are included in the range (200-219 for males, 252-271 for females)
+		// No premium account restrictions needed
+
+		if(NewOutfit.OutfitID < FirstOutfit || NewOutfit.OutfitID > LastOutfit){
+			if(Player->Sex == 1){
+				print(3, "CSetOutfit: Invalid outfit %d for males.\n", NewOutfit.OutfitID);
+			}else{
+				print(3, "CSetOutfit: Invalid outfit %d for females.\n", NewOutfit.OutfitID);
+			}
+			return;
+		}
 	}
 
 	if(NewOutfit.Colors[0] > 132
